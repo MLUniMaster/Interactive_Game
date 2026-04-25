@@ -1,26 +1,17 @@
 <!DOCTYPE html> 
 
 <html>
-<head>
-  <title>Javascript Racer - v4 (final)</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <link href="common.css" rel="stylesheet" type="text/css" />
-  
-  <style>
-  #controls {
-      display: none !important;
-  }
-  
-  #fps {
-      display: none !important;
-  }
-  
-  table td a {
-      display: none !important;
-  }
-  </style>
-  
-</head>
+<style>
+#controls {
+    display: none !important;
+}
+#fps {
+    display: none !important;
+}
+table td a {
+    display: none !important;
+}
+</style>
 
 <body> 
 
@@ -209,7 +200,6 @@ function update(dt) {
         crashes: crashCount,
         score: finalScore
     });
-    // Zusätzlich im Finish-Block:
 localStorage.setItem('race_time', finishedTime);
 localStorage.setItem('race_crashes', crashCount);
 localStorage.setItem('race_score', finalScore);
