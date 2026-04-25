@@ -10,7 +10,6 @@
 }
 </style>
 
-
 <body> 
 
   <table id="controls">
@@ -178,7 +177,7 @@ function update(dt) {
     updateHud('last_lap_time', formatTime(lastLapTime));
     showFinishOverlay();
     // ============================================
-    // LIME SURVEY DATEN ÜBERGEBEN
+    // LIME SURVEY DATEN ÃœBERGEBEN
     // ============================================
     var finishedTime = lastLapTime;
     var finalScore   = finishedTime + crashCount;
@@ -193,7 +192,7 @@ function update(dt) {
     if (f1) f1.value = finishedTime;
     if (f2) f2.value = crashCount;
     if (f3) f3.value = finalScore;
-    console.log("Race stats an LimeSurvey übertragen:", {
+    console.log("Race stats an LimeSurvey Ã¼bertragen:", {
         time: finishedTime,
         crashes: crashCount,
         score: finalScore
@@ -252,11 +251,11 @@ for(n = 0 ; n < playerSegment.sprites.length ; n++) {
         crashCount++;
         updateHud('crash_count', crashCount);
 
-        // wie Auto-Crash, aber größerer Rückstoß
+        // wie Auto-Crash, aber grÃ¶ÃŸerer RÃ¼ckstoÃŸ
         speed = speed * 0.5;     // wie vorher
         position = Util.increase(
             position,
-            -500,                // mehr Rückstoß (früher: -playerW * 200)
+            -500,                // mehr RÃ¼ckstoÃŸ (frÃ¼her: -playerW * 200)
             trackLength
         );
 
