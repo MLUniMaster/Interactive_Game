@@ -194,6 +194,10 @@ function update(dt) {
         crashes: crashCount,
         score: finalScore
     });
+    // Zusätzlich im Finish-Block:
+localStorage.setItem('race_time', finishedTime);
+localStorage.setItem('race_crashes', crashCount);
+localStorage.setItem('race_score', finalScore);
 }
 
   if (playerAbsoluteZ < FINISH_Z - 200) {
