@@ -50,6 +50,7 @@
   </audio>
   <span id="mute"></span>
 
+  <script src="stats.js"></script>
   <script src="common.js"></script>
   <script>
 
@@ -67,7 +68,7 @@
     var treeOffset     = 0;                       // current tree scroll offset
     var segments       = [];                      // array of road segments
     var cars           = [];                      // array of cars on the road
-    var stats          = null;
+    var stats           = Game.stats('fps');
     var canvas         = Dom.get('canvas');       // our canvas...
     var ctx            = canvas.getContext('2d'); // ...and its drawing context
     var background     = null;                    // our background image (loaded below)
