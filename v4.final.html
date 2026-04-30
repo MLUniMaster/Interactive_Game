@@ -183,51 +183,36 @@ function update(dt) {
   if (!window.finishFlagTriggered && playerAbsoluteZ >= FINISH_Z) {
     window.finishFlagTriggered = true;
     console.log("FINISH erreicht!");
+
     lastLapTime = currentLapTime;
     updateHud('last_lap_time', formatTime(lastLapTime));
     showFinishOverlay();
-    // ============================================
-    // LIME SURVEY DATEN ÜBERGEBEN
-    // ============================================
-    var finishedTime = lastLapTime;
-    var finalScore   = finishedTime + crashCount;
 
     var finishedTime = lastLapTime;
-var finalScore   = finishedTime + crashCount;
+    var finalScore = finishedTime + crashCount;
 
-if (window.opener) {
-  window.opener.postMessage({
-    type: 'raceResult',
-    race_time: finishedTime,
-    race_crashes: crashCount,
-    race_score: finalScore
-  }, '*');
-}
-
-setTimeout(function() {
-  window.close();
-}, 1500);
-    
-    if (window.LimeSurvey) {
-        LimeSurvey.setVariable('race_time', finishedTime);
-        LimeSurvey.setVariable('race_crashes', crashCount);
-        LimeSurvey.setVariable('race_score', finalScore);
+    if (window.opener) {
+      window.opener.postMessage({
+        type: 'raceResult',
+        race_time: finishedTime,
+        race_crashes: crashCount,
+        race_score: finalScore
+      }, '*');
     }
-    var f1 = document.getElementById('race_time');
-    var f2 = document.getElementById('race_crashes');
-    var f3 = document.getElementById('race_score');
-    if (f1) f1.value = finishedTime;
-    if (f2) f2.value = crashCount;
-    if (f3) f3.value = finalScore;
-    console.log("Race stats an LimeSurvey übertragen:", {
-        time: finishedTime,
-        crashes: crashCount,
-        score: finalScore
+
+    console.log("Race stats an Hauptfenster übertragen:", {
+      time: finishedTime,
+      crashes: crashCount,
+      score: finalScore
     });
-}
+
+    setTimeout(function() {
+      window.close();
+    }, 1500);
+  }
 
   if (playerAbsoluteZ < FINISH_Z - 200) {
-      window.finishFlagTriggered = false;
+    window.finishFlagTriggered = false;
   }
 
   // =======================
