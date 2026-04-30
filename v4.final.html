@@ -191,6 +191,23 @@ function update(dt) {
     // ============================================
     var finishedTime = lastLapTime;
     var finalScore   = finishedTime + crashCount;
+
+    var finishedTime = lastLapTime;
+var finalScore   = finishedTime + crashCount;
+
+if (window.opener) {
+  window.opener.postMessage({
+    type: 'raceResult',
+    race_time: finishedTime,
+    race_crashes: crashCount,
+    race_score: finalScore
+  }, '*');
+}
+
+setTimeout(function() {
+  window.close();
+}, 1500);
+    
     if (window.LimeSurvey) {
         LimeSurvey.setVariable('race_time', finishedTime);
         LimeSurvey.setVariable('race_crashes', crashCount);
