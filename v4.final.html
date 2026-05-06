@@ -50,8 +50,15 @@
 
 .controlGroup {
     display: flex;
-    flex-direction: column;
     gap: 10px;
+}
+
+.speedGroup {
+    flex-direction: column;
+}
+
+.steeringGroup {
+    flex-direction: row;
 }
 
   .touchBtn {
@@ -235,12 +242,12 @@
 
 <div id="mobileControls">
 
-  <div class="controlGroup">
+  <div class="controlGroup speedGroup">
     <button id="btnUp" class="touchBtn">▲</button>
     <button id="btnDown" class="touchBtn">▼</button>
   </div>
 
-  <div class="controlGroup">
+  <div class="controlGroup steeringGroup">
     <button id="btnLeft" class="touchBtn">◀</button>
     <button id="btnRight" class="touchBtn">▶</button>
   </div>
