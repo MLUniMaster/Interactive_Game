@@ -483,8 +483,10 @@ for(n = 0 ; n < playerSegment.sprites.length ; n++) {
         sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1),
         spriteW))
     {
-        crashCount++;
-        updateHud('crash_count', crashCount);
+if (!practiceMode) {
+    crashCount++;
+    updateHud('crash_count', crashCount);
+}
 
         // wie Auto-Crash, aber größerer Rückstoß
         speed = speed * 0.5;     // wie vorher
@@ -503,8 +505,10 @@ for(n = 0 ; n < playerSegment.sprites.length ; n++) {
         carW = car.sprite.w * SPRITES.SCALE;
         if (speed > car.speed) {
           if (Util.overlap(playerX, playerW, car.offset, carW, 0.8)) {
-   crashCount++;
-updateHud('crash_count', crashCount);
+if (!practiceMode) {
+    crashCount++;
+    updateHud('crash_count', crashCount);
+}
 speed    = car.speed * (car.speed/speed);
             position = Util.increase(car.z, -playerZ, trackLength);
             break;
