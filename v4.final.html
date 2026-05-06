@@ -16,10 +16,17 @@
       display: none !important;
   }
 
+  #racer {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+  }
+
   #mobileControls {
       display: none;
+      width: 100%;
       text-align: center;
-      margin-top: 15px;
+      margin: 12px auto 0 auto;
       user-select: none;
       touch-action: none;
   }
@@ -27,14 +34,15 @@
   .touchRow {
       display: flex;
       justify-content: center;
-      gap: 15px;
-      margin-top: 10px;
+      align-items: center;
+      gap: 14px;
+      margin-top: 8px;
   }
 
   .touchBtn {
-      width: 70px;
-      height: 70px;
-      font-size: 32px;
+      width: 64px;
+      height: 64px;
+      font-size: 30px;
       font-weight: bold;
       border: none;
       border-radius: 14px;
@@ -137,20 +145,21 @@
     <canvas id="canvas">
       Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
     </canvas>
+
+<div id="mobileControls">
+  <button id="btnUp" class="touchBtn">▲</button>
+
+  <div class="touchRow">
+    <button id="btnLeft" class="touchBtn">◀</button>
+    <button id="btnDown" class="touchBtn">▼</button>
+    <button id="btnRight" class="touchBtn">▶</button>
+  </div>
+</div>
+    
     Loading...
   </div>
 
-  <div id="mobileControls">
-    <button id="btnUp" class="touchBtn">▲</button>
-
-    <div class="touchRow">
-      <button id="btnLeft" class="touchBtn">◀</button>
-      <button id="btnDown" class="touchBtn">▼</button>
-      <button id="btnRight" class="touchBtn">▶</button>
-    </div>
-  </div>
-
-  <audio id='music'>
+   <audio id='music'>
     <source src="music/racer.ogg">
     <source src="music/racer.mp3">
   </audio>
