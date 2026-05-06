@@ -48,12 +48,11 @@
       touch-action: none;
   }
 
-  .touchRow {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 10px;
-  }
+.controlGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
   .touchBtn {
       width: 70px;
@@ -132,17 +131,17 @@
           font-size: 11px;
       }
 
-      #mobileControls {
-          display: block;
-          text-align: center;
-          margin-top: 10px;
-          margin-bottom: 10px;
-      }
-
-      .touchRow {
-          gap: 12px;
-          margin-top: 8px;
-      }
+#mobileControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 92vw;
+    max-width: 420px;
+    margin: 10px auto 10px auto;
+}
+.controlGroup {
+    gap: 10px;
+}
 
       .touchBtn {
           width: 58px;
@@ -234,15 +233,19 @@
     Loading...
   </div>
 
-  <div id="mobileControls">
-    <button id="btnUp" class="touchBtn">▲</button>
+<div id="mobileControls">
 
-    <div class="touchRow">
-      <button id="btnLeft" class="touchBtn">◀</button>
-      <button id="btnDown" class="touchBtn">▼</button>
-      <button id="btnRight" class="touchBtn">▶</button>
-    </div>
+  <div class="controlGroup">
+    <button id="btnUp" class="touchBtn">▲</button>
+    <button id="btnDown" class="touchBtn">▼</button>
   </div>
+
+  <div class="controlGroup">
+    <button id="btnLeft" class="touchBtn">◀</button>
+    <button id="btnRight" class="touchBtn">▶</button>
+  </div>
+
+</div>
 
   <audio id='music'>
     <source src="music/racer.ogg">
