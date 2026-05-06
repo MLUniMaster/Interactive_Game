@@ -16,17 +16,36 @@
       display: none !important;
   }
 
-  #racer {
-      text-align: center;
-      margin-left: auto;
-      margin-right: auto;
-  }
+  #gameLayout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 25px;
+}
+
+#instructions {
+    width: 260px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* Auf dem Smartphone bleibt die Textbox über/unter dem Spiel */
+@media (max-width: 900px) {
+    #gameLayout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #instructions {
+        width: 90%;
+        text-align: center;
+    }
+}
 
   #mobileControls {
       display: none;
-      width: 100%;
       text-align: center;
-      margin: 12px auto 0 auto;
+      margin-top: 15px;
       user-select: none;
       touch-action: none;
   }
@@ -34,15 +53,14 @@
   .touchRow {
       display: flex;
       justify-content: center;
-      align-items: center;
-      gap: 14px;
-      margin-top: 8px;
+      gap: 15px;
+      margin-top: 10px;
   }
 
   .touchBtn {
-      width: 64px;
-      height: 64px;
-      font-size: 30px;
+      width: 70px;
+      height: 70px;
+      font-size: 32px;
       font-weight: bold;
       border: none;
       border-radius: 14px;
@@ -125,12 +143,9 @@
     </tr>
   </table>
 
-<div id='instructions'>
-  <p>
-    Steuerung erfolgt über die <b>Pfeiltasten</b>.<br>
-    Das Fenster bitte erst schließen, <b>nachdem die Ziellinie überquert</b> wurde.
-  </p>
-</div>
+<div id="gameLayout">
+
+  <div id="racer">
 
   <div id="racer">
 <div id="finishOverlay">FINISH!</div>
@@ -145,21 +160,34 @@
     <canvas id="canvas">
       Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
     </canvas>
-
-<div id="mobileControls">
-  <button id="btnUp" class="touchBtn">▲</button>
-
-  <div class="touchRow">
-    <button id="btnLeft" class="touchBtn">◀</button>
-    <button id="btnDown" class="touchBtn">▼</button>
-    <button id="btnRight" class="touchBtn">▶</button>
-  </div>
-</div>
-    
     Loading...
   </div>
 
-   <audio id='music'>
+        Loading...
+  </div>
+
+  <div id="instructions">
+    <p>
+      Steuerung erfolgt über die <b>Pfeiltasten</b>.<br>
+      Das Fenster bitte erst schließen, <b>nachdem die Ziellinie überquert</b> wurde.
+    </p>
+  </div>
+
+</div>
+
+  <div id="mobileControls">
+
+  <div id="mobileControls">
+    <button id="btnUp" class="touchBtn">▲</button>
+
+    <div class="touchRow">
+      <button id="btnLeft" class="touchBtn">◀</button>
+      <button id="btnDown" class="touchBtn">▼</button>
+      <button id="btnRight" class="touchBtn">▶</button>
+    </div>
+  </div>
+
+  <audio id='music'>
     <source src="music/racer.ogg">
     <source src="music/racer.mp3">
   </audio>
