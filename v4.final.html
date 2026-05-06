@@ -3,15 +3,59 @@
 <html>
 <head>
   <title>Javascript Racer - v4 (final)</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <link href="common.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link href="common.css" rel="stylesheet" type="text/css" />
 
 <style>
   #controls {
       display: none !important;
   }
+
   #fps {
       display: none !important;
+  }
+
+  #mobileControls {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+      user-select: none;
+      touch-action: none;
+  }
+
+  .touchRow {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+  }
+
+  .touchBtn {
+      width: 70px;
+      height: 70px;
+      font-size: 32px;
+      font-weight: bold;
+      border: none;
+      border-radius: 14px;
+      background: #222;
+      color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+
+  .touchBtn:active {
+      background: #555;
+      transform: scale(0.95);
+  }
+
+  @media (max-width: 900px) {
+      #mobileControls {
+          display: block;
+      }
+
+      #instructions {
+          font-size: 14px;
+      }
   }
 </style>
   
@@ -96,6 +140,16 @@
     Loading...
   </div>
 
+  <div id="mobileControls">
+    <button id="btnUp" class="touchBtn">▲</button>
+
+    <div class="touchRow">
+      <button id="btnLeft" class="touchBtn">◀</button>
+      <button id="btnDown" class="touchBtn">▼</button>
+      <button id="btnRight" class="touchBtn">▶</button>
+    </div>
+  </div>
+
   <audio id='music'>
     <source src="music/racer.ogg">
     <source src="music/racer.mp3">
@@ -156,6 +210,64 @@
     var keyFaster      = false;
     var keySlower      = false;
 
+function bindTouchButton(id, onPress, onRelease) {
+  var btn = document.getElementById(id);
+
+  if (!btn) return;
+
+  btn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    onPress();
+  }, { passive: false });
+
+  btn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    onRelease();
+  }, { passive: false });
+
+  btn.addEventListener('touchcancel', function(e) {
+    e.preventDefault();
+    onRelease();
+  }, { passive: false });
+
+  btn.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    onPress();
+  });
+
+  btn.addEventListener('mouseup', function(e) {
+    e.preventDefault();
+    onRelease();
+  });
+
+  btn.addEventListener('mouseleave', function(e) {
+    e.preventDefault();
+    onRelease();
+  });
+}
+
+window.addEventListener('load', function() {
+  bindTouchButton('btnLeft',
+    function() { keyLeft = true; },
+    function() { keyLeft = false; }
+  );
+
+  bindTouchButton('btnRight',
+    function() { keyRight = true; },
+    function() { keyRight = false; }
+  );
+
+  bindTouchButton('btnUp',
+    function() { keyFaster = true; },
+    function() { keyFaster = false; }
+  );
+
+  bindTouchButton('btnDown',
+    function() { keySlower = true; },
+    function() { keySlower = false; }
+  );
+});
+    
     var hud = {
       speed:            { value: null, dom: Dom.get('speed_value')            },
       current_lap_time: { value: null, dom: Dom.get('current_lap_time_value') },
