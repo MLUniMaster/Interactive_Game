@@ -225,7 +225,7 @@
 
   <div id="racer">
 <div id="finishOverlay">FINISH!</div>
-    <div id="practiceOverlay">TESTLAUF<br><span id="practiceTimeValue">10</span> Sekunden</div>
+    <div id="practiceOverlay">TESTLAUF<br><span id="practiceTimeValue">7</span> Sekunden</div>
     <div id="hud">
       <span id="speed"            class="hud"><span id="speed_value" class="value">0</span> mph</span>
       <span id="current_lap_time" class="hud">Time: <span id="current_lap_time_value" class="value">0.0</span></span> 
@@ -309,9 +309,11 @@
     var currentLapTime = 0;                       // current lap time
     var lastLapTime    = null;                    // last lap time
     var practiceMode   = true;
-    var practiceTime   = 10;
+    var practiceTime   = 7;
     var practiceElapsed = 0;
     var realRaceStarted = false;
+    var sectionTimes = [null, null, null, null];
+    var sectionReached = [false, false, false, false];
 
     var keyLeft        = false;
     var keyRight       = false;
@@ -426,15 +428,18 @@ function update(dt) {
 
     var finishedTime = lastLapTime;
     var finalScore = finishedTime + crashCount;
+    sectionTimes[3] = finishedTime;
 
-    if (window.opener) {
-      window.opener.postMessage({
-        type: 'raceResult',
-        race_time: finishedTime,
-        race_crashes: crashCount,
-        race_score: finalScore
-      }, 'https://umfrage.fernuni-hagen.de');
-    }
+    window.opener.postMessage({
+  type: 'raceResult',
+  race_time: finishedTime,
+  race_crashes: crashCount,
+  race_score: finalScore,
+  race_section_1: sectionTimes[0],
+  race_section_2: sectionTimes[1],
+  race_section_3: sectionTimes[2],
+  race_section_4: sectionTimes[3]
+}, 'https://umfrage.fernuni-hagen.de');
 
     console.log("Race stats an Hauptfenster übertragen:", {
       time: finishedTime,
@@ -464,6 +469,30 @@ function update(dt) {
       updateCars(dt, playerSegment, playerW);
 
       position = Util.increase(position, dt * speed, trackLength);
+
+      if (!practiceMode) {
+  var finishSegmentIndex = segments.length - rumbleLength;
+  var FINISH_Z = finishSegmentIndex * segmentLength;
+  var progress = position / FINISH_Z;
+
+  if (!sectionReached[0] && progress >= 0.25) {
+    sectionReached[0] = true;
+    sectionTimes[0] = currentLapTime;
+    console.log("Abschnitt 1 erreicht:", sectionTimes[0]);
+  }
+
+  if (!sectionReached[1] && progress >= 0.50) {
+    sectionReached[1] = true;
+    sectionTimes[1] = currentLapTime;
+    console.log("Abschnitt 2 erreicht:", sectionTimes[1]);
+  }
+
+  if (!sectionReached[2] && progress >= 0.75) {
+    sectionReached[2] = true;
+    sectionTimes[2] = currentLapTime;
+    console.log("Abschnitt 3 erreicht:", sectionTimes[2]);
+  }
+}
 
       if (keyLeft)
         playerX = playerX - dx;
@@ -664,6 +693,8 @@ function showFinishOverlay() {
     currentLapTime = 0;
     lastLapTime = null;
     window.finishFlagTriggered = false;
+    sectionTimes = [null, null, null, null];
+    sectionReached = [false, false, false, false];
 
     resetRoad();
 
