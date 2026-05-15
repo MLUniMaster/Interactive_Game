@@ -312,8 +312,12 @@
     var practiceTime   = 7;
     var practiceElapsed = 0;
     var realRaceStarted = false;
-    var sectionTimes = [null, null, null, null];
+    var sectionTimes = [null, null, null, null];        // Einzelzeiten je Abschnitt
     var sectionReached = [false, false, false, false];
+
+    var sectionCrashCounts = [0, 0, 0, 0];              // Crashes je Abschnitt
+    var currentSection = 0;                       // 0 = Abschnitt 1, 1 = Abschnitt 2 usw.
+    var lastSectionTime = 0;                  // Zeitpunkt des letzten Abschnittswechsels
 
     var keyLeft        = false;
     var keyRight       = false;
@@ -428,17 +432,24 @@ function update(dt) {
 
     var finishedTime = lastLapTime;
     var finalScore = finishedTime + crashCount;
-    sectionTimes[3] = finishedTime;
 
-    window.opener.postMessage({
+    sectionTimes[3] = finishedTime - lastSectionTime;
+
+ window.opener.postMessage({
   type: 'raceResult',
-  race_time: finishedTime,
-  race_crashes: crashCount,
-  race_score: finalScore,
-  race_section_1: sectionTimes[0],
-  race_section_2: sectionTimes[1],
-  race_section_3: sectionTimes[2],
-  race_section_4: sectionTimes[3]
+  racetime: finishedTime,
+  racecrashes: crashCount,
+  racescore: finalScore,
+
+  racesection1: sectionTimes[0],
+  racesection2: sectionTimes[1],
+  racesection3: sectionTimes[2],
+  racesection4: sectionTimes[3],
+
+  racecrashessection1: sectionCrashCounts[0],
+  racecrashessection2: sectionCrashCounts[1],
+  racecrashessection3: sectionCrashCounts[2],
+  racecrashessection4: sectionCrashCounts[3]
 }, 'https://umfrage.fernuni-hagen.de');
 
     console.log("Race stats an Hauptfenster übertragen:", {
@@ -470,27 +481,33 @@ function update(dt) {
 
       position = Util.increase(position, dt * speed, trackLength);
 
-      if (!practiceMode) {
+if (!practiceMode) {
   var finishSegmentIndex = segments.length - rumbleLength;
   var FINISH_Z = finishSegmentIndex * segmentLength;
   var progress = position / FINISH_Z;
 
   if (!sectionReached[0] && progress >= 0.25) {
     sectionReached[0] = true;
-    sectionTimes[0] = currentLapTime;
-    console.log("Abschnitt 1 erreicht:", sectionTimes[0]);
+    sectionTimes[0] = currentLapTime - lastSectionTime;
+    lastSectionTime = currentLapTime;
+    currentSection = 1;
+    console.log("Abschnitt 1 Zeit:", sectionTimes[0], "Crashes:", sectionCrashCounts[0]);
   }
 
   if (!sectionReached[1] && progress >= 0.50) {
     sectionReached[1] = true;
-    sectionTimes[1] = currentLapTime;
-    console.log("Abschnitt 2 erreicht:", sectionTimes[1]);
+    sectionTimes[1] = currentLapTime - lastSectionTime;
+    lastSectionTime = currentLapTime;
+    currentSection = 2;
+    console.log("Abschnitt 2 Zeit:", sectionTimes[1], "Crashes:", sectionCrashCounts[1]);
   }
 
   if (!sectionReached[2] && progress >= 0.75) {
     sectionReached[2] = true;
-    sectionTimes[2] = currentLapTime;
-    console.log("Abschnitt 3 erreicht:", sectionTimes[2]);
+    sectionTimes[2] = currentLapTime - lastSectionTime;
+    lastSectionTime = currentLapTime;
+    currentSection = 3;
+    console.log("Abschnitt 3 Zeit:", sectionTimes[2], "Crashes:", sectionCrashCounts[2]);
   }
 }
 
@@ -524,9 +541,13 @@ for(n = 0 ; n < playerSegment.sprites.length ; n++) {
     {
 if (!practiceMode) {
     crashCount++;
+
+    if (currentSection >= 0 && currentSection < sectionCrashCounts.length) {
+        sectionCrashCounts[currentSection]++;
+    }
+
     updateHud('crash_count', crashCount);
 }
-
         // wie Auto-Crash, aber größerer Rückstoß
         speed = speed * 0.5;     // wie vorher
         position = Util.increase(
@@ -546,9 +567,13 @@ if (!practiceMode) {
           if (Util.overlap(playerX, playerW, car.offset, carW, 0.8)) {
 if (!practiceMode) {
     crashCount++;
+
+    if (currentSection >= 0 && currentSection < sectionCrashCounts.length) {
+        sectionCrashCounts[currentSection]++;
+    }
+
     updateHud('crash_count', crashCount);
-}
-speed    = car.speed * (car.speed/speed);
+}speed    = car.speed * (car.speed/speed);
             position = Util.increase(car.z, -playerZ, trackLength);
             break;
           }
@@ -695,6 +720,10 @@ function showFinishOverlay() {
     window.finishFlagTriggered = false;
     sectionTimes = [null, null, null, null];
     sectionReached = [false, false, false, false];
+
+    sectionCrashCounts = [0, 0, 0, 0];
+    currentSection = 0;
+    lastSectionTime = 0;
 
     resetRoad();
 
