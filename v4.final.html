@@ -477,7 +477,9 @@ function update(dt) {
       var dx            = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
       var startPosition = position;
 
+      if (!practiceMode) {
       updateCars(dt, playerSegment, playerW);
+    }
 
       position = Util.increase(position, dt * speed, trackLength);
 
@@ -801,14 +803,16 @@ function showFinishOverlay() {
       for(n = (drawDistance-1) ; n > 0 ; n--) {
         segment = segments[(baseSegment.index + n) % segments.length];
 
-        for(i = 0 ; i < segment.cars.length ; i++) {
-          car         = segment.cars[i];
-          sprite      = car.sprite;
-          spriteScale = Util.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
-          spriteX     = Util.interpolate(segment.p1.screen.x,     segment.p2.screen.x,     car.percent) + (spriteScale * car.offset * roadWidth * width/2);
-          spriteY     = Util.interpolate(segment.p1.screen.y,     segment.p2.screen.y,     car.percent);
-          Render.sprite(ctx, width, height, resolution, roadWidth, sprites, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
-        }
+        if (!practiceMode) {
+      for(i = 0 ; i < segment.cars.length ; i++) {
+      car         = segment.cars[i];
+      sprite      = car.sprite;
+      spriteScale = Util.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
+      spriteX     = Util.interpolate(segment.p1.screen.x,     segment.p2.screen.x,     car.percent) + (spriteScale * car.offset * roadWidth * width/2);
+      spriteY     = Util.interpolate(segment.p1.screen.y,     segment.p2.screen.y,     car.percent);
+      Render.sprite(ctx, width, height, resolution, roadWidth, sprites, car.sprite, spriteScale, spriteX, spriteY, -0.5, -1, segment.clip);
+  }
+}
 
         for(i = 0 ; i < segment.sprites.length ; i++) {
           sprite      = segment.sprites[i];
