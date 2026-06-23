@@ -285,7 +285,7 @@
     var sprites        = null;                    // our spritesheet (loaded below)
     var resolution     = null;                    // scaling factor to provide resolution independence (computed)
     var roadWidth      = 2000;                    // actually half the roads width, easier math if the road spans from -roadWidth to +roadWidth
-    var segmentLength  = 400;                     // length of a single segment
+    var segmentLength  = 200;                     // length of a single segment
     var rumbleLength   = 3;                       // number of segments per red/white rumble strip
     var trackLength    = null;                    // z length of entire track (computed)
     var lanes          = 3;                       // number of lanes
@@ -299,7 +299,7 @@
     var position       = 0;                       // current camera Z position (add playerZ to get player's absolute Z position)
     var speed          = 0;                       // current speed
     var crashCount     = 0;                       // amount of crashs
-    var maxSpeed       = 200/step;      // top speed (ensure we can't move more than 1 segment in a single frame to make collision detection easier)
+    var maxSpeed       = segmentLength/step;      // top speed (ensure we can't move more than 1 segment in a single frame to make collision detection easier)
     var accel          =  maxSpeed/5;             // acceleration rate - tuned until it 'felt' right
     var breaking       = -maxSpeed;               // deceleration rate when braking
     var decel          = -maxSpeed/5;             // 'natural' deceleration rate when neither accelerating, nor braking
@@ -931,38 +931,50 @@ function showFinishOverlay() {
       addRoad(num, num, num, -ROAD.CURVE.EASY, -lastY()/segmentLength);
     }
 
-    function resetRoad() {
-      segments = [];
+function addRaceCourse() {
+  addStraight(ROAD.LENGTH.SHORT);
+  addLowRollingHills();
+  addSCurves();
+  addCurve(ROAD.LENGTH.MEDIUM, ROAD.CURVE.MEDIUM, ROAD.HILL.LOW);
+  addBumps();
+  addLowRollingHills();
+  addCurve(ROAD.LENGTH.LONG*2, ROAD.CURVE.MEDIUM, ROAD.HILL.MEDIUM);
+  addStraight();
+  addHill(ROAD.LENGTH.MEDIUM, ROAD.HILL.HIGH);
+  addSCurves();
+  addCurve(ROAD.LENGTH.LONG, -ROAD.CURVE.MEDIUM, ROAD.HILL.NONE);
+  addHill(ROAD.LENGTH.LONG, ROAD.HILL.HIGH);
+  addCurve(ROAD.LENGTH.LONG, ROAD.CURVE.MEDIUM, -ROAD.HILL.LOW);
+  addBumps();
+  addHill(ROAD.LENGTH.LONG, -ROAD.HILL.MEDIUM);
+  addStraight();
+  addSCurves();
+}
 
-      addStraight(ROAD.LENGTH.SHORT);
-      addLowRollingHills();
-      addSCurves();
-      addCurve(ROAD.LENGTH.MEDIUM, ROAD.CURVE.MEDIUM, ROAD.HILL.LOW);
-      addBumps();
-      addLowRollingHills();
-      addCurve(ROAD.LENGTH.LONG*2, ROAD.CURVE.MEDIUM, ROAD.HILL.MEDIUM);
-      addStraight();
-      addHill(ROAD.LENGTH.MEDIUM, ROAD.HILL.HIGH);
-      addSCurves();
-      addCurve(ROAD.LENGTH.LONG, -ROAD.CURVE.MEDIUM, ROAD.HILL.NONE);
-      addHill(ROAD.LENGTH.LONG, ROAD.HILL.HIGH);
-      addCurve(ROAD.LENGTH.LONG, ROAD.CURVE.MEDIUM, -ROAD.HILL.LOW);
-      addBumps();
-      addHill(ROAD.LENGTH.LONG, -ROAD.HILL.MEDIUM);
-      addStraight();
-      addSCurves();
-      addDownhillToEnd();
+function resetRoad() {
+  segments = [];
 
-      resetSprites();
-      resetCars();
+  addRaceCourse();
+  addRaceCourse();
 
-      segments[findSegment(playerZ).index + 2].color = COLORS.START;
-      segments[findSegment(playerZ).index + 3].color = COLORS.START;
-      for(var n = 0 ; n < rumbleLength ; n++)
-        segments[segments.length-1-n].color = COLORS.FINISH;
+  addDownhillToEnd();
 
-      trackLength = segments.length * segmentLength;
-    }
+  resetSprites();
+  resetCars();
+
+  segments[findSegment(playerZ).index + 2].color = COLORS.START;
+  segments[findSegment(playerZ).index + 3].color = COLORS.START;
+
+  for(var n = 0 ; n < rumbleLength ; n++)
+    segments[segments.length-1-n].color = COLORS.FINISH;
+
+  trackLength = segments.length * segmentLength;
+
+  console.log("segments:", segments.length);
+  console.log("segmentLength:", segmentLength);
+  console.log("trackLength:", trackLength);
+  console.log("FINISH_Z:", (segments.length - rumbleLength) * segmentLength);
+}
 
     function resetSprites() {
       var n, i;
