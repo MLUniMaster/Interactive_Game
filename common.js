@@ -204,17 +204,75 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
   //---------------------------------------------------------------------------
 
   playMusic: function() {
-    var music = Dom.get('music');
-    music.loop = true;
-    music.volume = 0.05; // shhhh! annoying music!
-    music.muted = (Dom.storage.muted === "true");
-    music.play();
-    Dom.toggleClassName('mute', 'on', music.muted);
-    Dom.on('mute', 'click', function() {
+  var music = Dom.get('music');
+  var muteButton = Dom.get('mute');
+  var musicStarted = false;
+
+  if (!music) {
+    console.error('Das Audio-Element mit der ID "music" wurde nicht gefunden.');
+    return;
+  }
+
+  music.loop = true;
+  music.volume = 0.05;
+  music.muted = (Dom.storage.muted === "true");
+
+  Dom.toggleClassName('mute', 'on', music.muted);
+
+  function startMusic() {
+    if (musicStarted) {
+      return;
+    }
+
+    var playPromise = music.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(function() {
+          musicStarted = true;
+          console.log('Musik wurde gestartet.');
+
+          removeStartListeners();
+        })
+        .catch(function(error) {
+          console.log(
+            'Musik konnte noch nicht gestartet werden. Eine weitere Eingabe ist erforderlich.',
+            error
+          );
+        });
+    }
+  }
+
+  function removeStartListeners() {
+    document.removeEventListener('keydown', startMusic);
+    document.removeEventListener('mousedown', startMusic);
+    document.removeEventListener('touchstart', startMusic);
+    document.removeEventListener('pointerdown', startMusic);
+  }
+
+  // Der automatische Versuch funktioniert in manchen Browsern.
+  startMusic();
+
+  // Falls Autoplay blockiert wird, startet die Musik
+  // bei der ersten Eingabe der spielenden Person.
+  document.addEventListener('keydown', startMusic);
+  document.addEventListener('mousedown', startMusic);
+  document.addEventListener('touchstart', startMusic, {
+    passive: true
+  });
+  document.addEventListener('pointerdown', startMusic);
+
+  if (muteButton) {
+    Dom.on(muteButton, 'click', function() {
       Dom.storage.muted = music.muted = !music.muted;
       Dom.toggleClassName('mute', 'on', music.muted);
+
+      if (!music.muted) {
+        startMusic();
+      }
     });
   }
+}
 
 }
 
