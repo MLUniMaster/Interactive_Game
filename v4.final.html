@@ -300,6 +300,7 @@
     var speed          = 0;                       // current speed
     var crashCount     = 0;                       // amount of crashs
     var maxSpeed       = segmentLength/step;      // top speed (ensure we can't move more than 1 segment in a single frame to make collision detection easier)
+    var maxReverseSpeed = maxSpeed / 5;           // ca. 20 % der Vorwärtsgeschwindigkeit
     var accel          =  maxSpeed/5;             // acceleration rate - tuned until it 'felt' right
     var breaking       = -maxSpeed;               // deceleration rate when braking
     var decel          = -maxSpeed/5;             // 'natural' deceleration rate when neither accelerating, nor braking
@@ -520,12 +521,30 @@ if (!practiceMode) {
 
       playerX = playerX - (dx * speedPercent * playerSegment.curve * centrifugal);
 
-      if (keyFaster)
+      if (keyFaster) {
+
+    if (speed < 0)
+        speed = Util.accelerate(speed, accel * 2, dt);   // zuerst abbremsen
+    else
         speed = Util.accelerate(speed, accel, dt);
-      else if (keySlower)
-        speed = Util.accelerate(speed, breaking, dt);
-      else
+
+}
+else if (keySlower) {
+
+    if (speed > 0)
+        speed = Util.accelerate(speed, breaking, dt);    // normal bremsen
+    else
+        speed = Util.accelerate(speed, breaking / 2, dt); // anschließend rückwärts fahren
+
+}
+else {
+
+    if (speed > 0)
         speed = Util.accelerate(speed, decel, dt);
+    else if (speed < 0)
+        speed = Util.accelerate(speed, -decel, dt);       // rückwärts ausrollen
+
+}
 
 
       if ((playerX < -1) || (playerX > 1)) {
@@ -583,7 +602,7 @@ if (!practiceMode) {
       }
 
       playerX = Util.limit(playerX, -3, 3);     // dont ever let it go too far out of bounds
-      speed   = Util.limit(speed, 0, maxSpeed); // or exceed maxSpeed
+      speed = Util.limit(speed, -maxReverseSpeed, maxSpeed); // or exceed maxSpeed
 
       skyOffset  = Util.increase(skyOffset,  skySpeed  * playerSegment.curve * (position-startPosition)/segmentLength, 1);
       hillOffset = Util.increase(hillOffset, hillSpeed * playerSegment.curve * (position-startPosition)/segmentLength, 1);
