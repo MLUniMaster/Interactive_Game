@@ -215,7 +215,10 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
 
   music.loop = true;
   music.volume = 0.05;
-  music.muted = (Dom.storage.muted === "true");
+  var urlParameters = new URLSearchParams(window.location.search);
+var muteFromSurvey = urlParameters.get('mute') === '1';
+
+music.muted = muteFromSurvey || (Dom.storage.muted === "true");
 
   Dom.toggleClassName('mute', 'on', music.muted);
 
