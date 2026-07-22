@@ -264,6 +264,19 @@
   <script src="common.js"></script>
   <script>
 
+    // Prüfen, ob LimeSurvey das Spiel mit ?mute=1 geöffnet hat
+var urlParameters = new URLSearchParams(window.location.search);
+var startMuted = urlParameters.get('mute') === '1';
+
+// Audioelement holen
+var raceMusic = document.getElementById('music');
+
+// Musik entsprechend der Auswahl stummschalten
+if (raceMusic) {
+    raceMusic.muted = startMuted;
+    raceMusic.volume = startMuted ? 0 : 1;
+}
+
     var fps            = 60;                      // how many 'update' frames per second
     var step           = 1/fps;                   // how long is each frame (in seconds)
     var width          = 1024;                    // logical canvas width
