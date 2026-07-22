@@ -213,14 +213,19 @@ var Game = {  // a modified version of the game loop from my previous boulderdas
     return;
   }
 
-  music.loop = true;
-  music.volume = 0.05;
-  var urlParameters = new URLSearchParams(window.location.search);
+music.loop = true;
+music.volume = 0.05;
+
+var urlParameters = new URLSearchParams(window.location.search);
 var muteFromSurvey = urlParameters.get('mute') === '1';
 
-music.muted = muteFromSurvey || (Dom.storage.muted === "true");
+/*
+ * Ausschließlich die Auswahl aus LimeSurvey verwenden.
+ * Frühere Einstellungen im Browser werden nicht berücksichtigt.
+ */
+music.muted = muteFromSurvey;
 
-  Dom.toggleClassName('mute', 'on', music.muted);
+Dom.toggleClassName('mute', 'on', music.muted);
 
   function startMusic() {
     if (musicStarted) {
@@ -267,7 +272,7 @@ music.muted = muteFromSurvey || (Dom.storage.muted === "true");
 
   if (muteButton) {
     Dom.on(muteButton, 'click', function() {
-      Dom.storage.muted = music.muted = !music.muted;
+      music.muted = !music.muted;
       Dom.toggleClassName('mute', 'on', music.muted);
 
       if (!music.muted) {
