@@ -220,12 +220,14 @@
   <p>
     Steuerung erfolgt über die <b>Pfeiltasten</b>.<br>
     Das Fenster wird automatisch geschlossen, <b>nachdem die Ziellinie überquert</b> wurde.
+    Use the <b>arrow keys</b> to control the vehicle.<br>
+    The window will close automatically <b>after you cross the finish line</b>.
   </p>
 </div>
 
   <div id="racer">
 <div id="finishOverlay">FINISH!</div>
-    <div id="practiceOverlay">TESTLAUF<br><span id="practiceTimeValue">7</span> Sekunden</div>
+    <div id="practiceOverlay">TEST<br><span id="practiceTimeValue">7</span> Sek./Sec.</div>
     <div id="hud">
       <span id="speed"            class="hud"><span id="speed_value" class="value">0</span> mph</span>
       <span id="current_lap_time" class="hud">Time: <span id="current_lap_time_value" class="value">0.0</span></span> 
@@ -755,7 +757,7 @@ function showFinishOverlay() {
 
     var overlay = document.getElementById("practiceOverlay");
     if (overlay) {
-        overlay.innerHTML = "ECHTES RENNEN<br>START!";
+        overlay.innerHTML = "START!";
         overlay.style.display = "block";
 
         setTimeout(function() {
